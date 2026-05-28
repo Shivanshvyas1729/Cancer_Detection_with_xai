@@ -1,0 +1,12 @@
+streamlit
+tensorflow
+pillow  # loading images
+numpy
+huggingface-hub
+opencv-python-headless #processing img
+matplotlib
+python-docx #report
+fastapi  #backend
+uvicorn   #fastapi part
+python-multipart #also
+jinja2 #for making templates

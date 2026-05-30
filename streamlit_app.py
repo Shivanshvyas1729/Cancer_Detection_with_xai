@@ -149,5 +149,11 @@ def main ():
                 )
 
 
+
+with st.sidebar:
+    st.markdown("### 👨‍💻 Developer shivansh")
+    st.markdown("[🌍 Portfolio](https://my-personal-portfolio-ten-pearl.vercel.app/)")
+    st.markdown("[💼 LinkedIn](https://www.linkedin.com/in/shivanshvyas/)")
+    st.markdown("[🐙 GitHub](https://github.com/Shivanshvyas1729)")
 if __name__ == "__main__":
     main()

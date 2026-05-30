@@ -2,6 +2,8 @@
 
 Welcome to the **Cancer Detection with XAI** project! This repository contains a lightweight and efficient deep learning pipeline to detect cancer, specifically focusing on mobile/edge deployment and small datasets.
 
+live link -  https://cancerdetectionwithxai.streamlit.app/
+
 ## Technologies & Libraries Used
 
 ### Core Deep Learning & Architecture

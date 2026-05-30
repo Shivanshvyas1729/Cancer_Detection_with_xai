@@ -1,3 +1,5 @@
 2026-05-30 19:27:48 | INFO | __main__ | streamlit_app.py:82 | file uploaded in streamlit : lbox_37464-Afbeelding1.jpg
 2026-05-30 19:27:48 | INFO | utils.processing | processing.py:18 | Preprocessing image of size : (600, 450) and mode : RGB
 2026-05-30 19:27:48 | INFO | utils.report_generator | report_generator.py:31 | Generating enhanced medical report for: Benign (Non-Cancerous)
+2026-05-30 19:57:09 | INFO | __main__ | streamlit_app.py:54 | Loding model for streamlit...
+2026-05-30 19:57:12 | INFO | __main__ | streamlit_app.py:58 | Streamlit model loaded successfully

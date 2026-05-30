@@ -5,6 +5,7 @@ numpy
 huggingface-hub
 opencv-python-headless #processing img
 matplotlib
+seaborn
 python-docx #report
 fastapi  #backend
 uvicorn   #fastapi part

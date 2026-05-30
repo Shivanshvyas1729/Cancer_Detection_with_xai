@@ -3,7 +3,9 @@ import numpy as np
 import cv2
 import matplotlib.cm as cm
 from PIL import Image
-from utils.logger import logger
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     """

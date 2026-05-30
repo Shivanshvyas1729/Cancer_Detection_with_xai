@@ -5,7 +5,9 @@ from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 import io
 import datetime
-from utils.logger import logger
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 def set_cell_margins(cell, **kwargs):
     """
@@ -132,6 +134,8 @@ def generate_docx_report(image_buffer, prediction_label, confidence_score, confi
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.style.font.size = Pt(9)
     p.style.font.italic = True
+
+    
 
     # Save to buffer
     doc_buffer = io.BytesIO()

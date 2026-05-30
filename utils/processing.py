@@ -1,8 +1,10 @@
 import numpy as np
 
-from utils.logger import logger
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
 from PIL import Image
-def preprocessing_image(image):
+def preprocess_image(image):
     """
     Preprocesses the image for the FibonacciNet model.
     Steps:

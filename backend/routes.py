@@ -1,5 +1,5 @@
 from fastapi import APIRouter, File, UploadFile, Request
-from fastapi.responses import HTMLResponse, StreamingResponse, JSONResponse
+from fastapi.responses import HTMLResponse, StreamingResponse, JSONResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 import io
 import base64
@@ -87,6 +87,10 @@ def read_root(request: Request):
         "index.html",
         {"request": request}
     )
+
+@router.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return FileResponse("frontend/static/favicon.ico")
 
 # **Short Description:**
 

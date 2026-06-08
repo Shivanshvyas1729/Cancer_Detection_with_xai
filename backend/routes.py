@@ -34,7 +34,7 @@ def load_model():
     if MODEL is None:
         try:
             logger.info("Loading model from Hugging Face...")
-            model_path = hf_hub_download(repo_id=REPO_ID, filename=MODEL_FILENAME)
+            model_path = hf_hub_download(repo_id=REPO_ID, filename=MODEL_FILENAME, cache_dir="/tmp")
             custom_objects = {
                 "Avg2MaxPooling": Avg2MaxPooling, 
                 "DepthwiseSeparableConv": DepthwiseSeparableConv

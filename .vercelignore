@@ -1,0 +1,14 @@
+# Exclude virtual environments
+thyroid/
+.venv/
+
+# Exclude raw training data
+Thyroid Data/
+
+# Exclude logs and local cache
+logs/
+__pycache__/
+*.log
+
+# Exclude Jupyter notebooks/experiments
+experiments/

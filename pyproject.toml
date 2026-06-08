@@ -5,14 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "streamlit",
-    "tensorflow>=2.16.0",
+    "tensorflow-cpu>=2.16.0",
     "pillow",
     "numpy",
     "huggingface-hub",
-    "opencv-python-headless",
-    "matplotlib",
-    "seaborn",
     "python-docx",
     "fastapi[standard]",
     "uvicorn",

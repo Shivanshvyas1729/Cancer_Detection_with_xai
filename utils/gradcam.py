@@ -16,6 +16,11 @@ def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None
         grad_model = tf.keras.models.Model(
             [model.inputs], [model.get_layer(last_conv_layer_name).output, model.output]
         )
+
+            # model.inputs → Input image to the model.
+            # model.get_layer(last_conv_layer_name).output → Output (feature maps) from the last convolution layer.
+            # model.output → Final prediction of the model.
+
     except Exception as e:
         logger.error(f"Error creating Grad-CAM model: {e}")
         return None
@@ -32,19 +37,22 @@ def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None
             pred_index = tf.argmax(preds[0])
         class_channel = preds[:, pred_index]
 
-    # This is the gradient of the output neuron (top predicted or chosen)
+#Calculate how much each feature map affects the selected prediction.
     grads = tape.gradient(class_channel, last_conv_layer_output)
-
+#Average the gradients over all spatial locations.
     # This is a vector where each entry is the mean intensity of the gradient
     pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
-
+#Multiply each channel by its importance weight and sum them
     # We multiply each channel in the feature map array
     last_conv_layer_output = last_conv_layer_output[0]
     heatmap = last_conv_layer_output @ pooled_grads[..., tf.newaxis]
-    heatmap = tf.squeeze(heatmap)
+    heatmap = tf.squeeze(heatmap)#Remove unnecessary dimensions.
 
     # For visualization purpose, we will also normalize the heatmap between 0 & 1
+    #Keep only positive contributions. tf.maximum(heatmap, 0)
+    
     heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
+    
     return heatmap.numpy()
 
 def save_and_display_gradcam(img, heatmap, alpha=0.4):

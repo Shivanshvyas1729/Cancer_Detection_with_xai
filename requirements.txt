@@ -1,5 +1,5 @@
 streamlit
-tensorflow
+tensorflow>=2.16.0
 pillow  # loading images
 numpy
 huggingface-hub
@@ -7,7 +7,7 @@ opencv-python-headless #processing img
 matplotlib
 seaborn
 python-docx #report
-fastapi  #backend
+fastapi[standard]  #backend
 uvicorn   #fastapi part
 python-multipart #also
 jinja2 #for making templates

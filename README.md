@@ -306,3 +306,301 @@ The code MUST:
 3. Avoid hardcoded values
 4. Return ONLY valid Python code (No markdown, no commentary, no pseudo-code).
 </details>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Here's the complete flow of your FastAPI routes:
+
+# Application Startup
+
+```text
+Server Starts
+      │
+      ▼
+startup_event()
+      │
+      ▼
+load_model()
+      │
+      ├── Download model from HuggingFace
+      ├── Load TensorFlow model
+      └── Store in global MODEL
+```
+
+---
+
+# Route 1: GET /
+
+```text
+Browser opens website
+         │
+         ▼
+GET /
+         │
+         ▼
+read_root()
+         │
+         ▼
+Return index.html
+         │
+         ▼
+Frontend Page Displayed
+```
+
+---
+
+# Route 2: POST /analyze
+
+```text
+User Uploads Thyroid Image
+           │
+           ▼
+POST /analyze
+           │
+           ▼
+analyze()
+           │
+           ▼
+Check MODEL loaded?
+           │
+     ┌─────┴─────┐
+     │           │
+    YES         NO
+     │           │
+     │      load_model()
+     │           │
+     │      Success?
+     │           │
+     │      ┌────┴────┐
+     │      │         │
+     │     YES       NO
+     │      │         │
+     │      │      Return 503
+     │      │
+     ▼      ▼
+
+Read Uploaded File
+           │
+           ▼
+contents = await file.read()
+           │
+           ▼
+Convert Bytes → PIL Image
+           │
+           ▼
+Image.open(BytesIO(contents))
+           │
+           ▼
+preprocess_image(image)
+           │
+           ▼
+processed_img
+           │
+           ▼
+MODEL.predict(processed_img)
+           │
+           ▼
+Prediction Score
+           │
+           ▼
+score = preds[0][0]
+           │
+           ▼
+score > 0.5 ?
+      ┌────┴────┐
+      │         │
+    True      False
+      │         │
+      ▼         ▼
+Malignant    Benign
+```
+
+### Grad-CAM Flow
+
+```text
+Find Last Conv Layer
+          │
+          ▼
+make_gradcam_heatmap()
+          │
+          ▼
+Heatmap Generated
+          │
+          ▼
+save_and_display_gradcam()
+          │
+          ▼
+Overlay Heatmap on Image
+          │
+          ▼
+Convert to Base64
+```
+
+### Final Response
+
+```text
+Return JSON
+
+{
+  label,
+  score,
+  percent,
+  class_id,
+  is_malignant,
+  original_image,
+  gradcam_image
+}
+```
+
+---
+
+# Route 3: POST /report
+
+```text
+User Clicks Download Report
+           │
+           ▼
+POST /report
+           │
+           ▼
+get_report()
+           │
+           ▼
+Check MODEL Loaded
+           │
+           ▼
+Read Uploaded Image
+           │
+           ▼
+preprocess_image()
+           │
+           ▼
+MODEL.predict()
+           │
+           ▼
+Get Score
+           │
+           ▼
+Determine Label
+           │
+           ▼
+Malignant / Benign
+```
+
+### Generate Grad-CAM Again
+
+```text
+Find Last Conv Layer
+          │
+          ▼
+Generate Heatmap
+          │
+          ▼
+Overlay on Image
+          │
+          ▼
+Save Into BytesIO
+```
+
+### Prepare Original Image
+
+```text
+Original PIL Image
+        │
+        ▼
+Save Into BytesIO
+```
+
+### Create DOCX Report
+
+```text
+generate_docx_report(
+    image,
+    prediction,
+    confidence,
+    gradcam
+)
+        │
+        ▼
+DOCX Buffer Created
+```
+
+### Send File To User
+
+```text
+DOCX Buffer
+      │
+      ▼
+StreamingResponse
+      │
+      ▼
+Browser Download
+
+thyroid_analysis_report.docx
+```
+
+---
+
+# Full System Flow
+
+```text
+                 Application Start
+                         │
+                         ▼
+                 Load AI Model
+                         │
+         ┌───────────────┴───────────────┐
+         │                               │
+         ▼                               ▼
+
+      GET /                         POST /analyze
+         │                               │
+         ▼                               ▼
+    index.html                 Upload Thyroid Image
+                                         │
+                                         ▼
+                                 Preprocess Image
+                                         │
+                                         ▼
+                                  AI Prediction
+                                         │
+                                         ▼
+                                  Generate GradCAM
+                                         │
+                                         ▼
+                                 Return JSON Result
+                                         │
+                                         ▼
+                             User Clicks Download Report
+                                         │
+                                         ▼
+                                   POST /report
+                                         │
+                                         ▼
+                              Predict + GradCAM Again
+                                         │
+                                         ▼
+                                Generate DOCX Report
+                                         │
+                                         ▼
+                             StreamingResponse(.docx)
+                                         │
+                                         ▼
+                                Report Downloaded
+```
+
+One thing to notice: **`/report` repeats almost all the work done in `/analyze`** (prediction + Grad-CAM). In production, many developers would save the analysis result from `/analyze` and reuse it in `/report` instead of recomputing everything. This is one of the first optimizations I'd suggest for this code.
